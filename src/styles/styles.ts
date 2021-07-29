@@ -51,6 +51,21 @@ const useStyles = makeStyles(theme => ({
       color: 'yellow',
     },
   },
+  formItemSpacing: {
+    marginLeft: '30px',
+  },
+  formItemAlign: {
+    component: "label",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  FormUtilsContainer: {
+    disableGutters: 'true',
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 export default useStyles;

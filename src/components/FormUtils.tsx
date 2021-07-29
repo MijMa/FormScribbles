@@ -1,4 +1,5 @@
 import React from 'react';
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Box, 
   Typography, 
@@ -7,122 +8,128 @@ import {
   FormControlLabel,
   Checkbox, 
   FormControl, 
-  Switch
+  Switch,
+  Button,
+  FormHelperText,
+  FormGroup,
+  FormLabel,
 } from '@material-ui/core';
+import { useStyles } from '../styles';
+import { Send } from '@material-ui/icons';
 
+const defaultValues = {
+  heliumMix: false,
+  aknowledged: false,
+  bearings: false,
+  airshipStatus: "",
+  coordinateW: "N: 40° 41' 21.2892''",
+  coordinateS: "W: 74° 2' 40.2072''",
+};
+
+type FormValues = {
+  heliumMix: boolean;
+  aknowledged: boolean;
+  bearings: boolean;
+  airshipStatus: String;
+  coordinateW: String;
+  coordinateS: String;
+};
 
 export default function FormUtils() {
-  
+
+  const { register, handleSubmit, control, formState: {errors} } = useForm<FormValues>();
+  const classes = useStyles();
+
   const [state, setState] = React.useState({
-    checkedA: false,
-  })
-  
+    checkedA: true,
+  });
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [event.target.name]: event.target.checked });
+  };
+
+  const onSubmit: SubmitHandler<FormValues> = data => {
+    console.log("do stuff on submit, oh and here's data too: " + data)
+    //Data on JSON-muodossa mutta miksi switcheistä ei tule dataa ja miksi defaulttidataa ei oteta?
+    console.log("do stuff on submit, oh and here's data too: " + JSON.stringify(data))
   }
-
+  
     return (
-
-      <div>
-        <FormControl>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl margin="normal">
           <Grid component="label" container alignItems="center" spacing={1}>
-          <Box bgcolor="secondary.main" color="secondary.contrastText" p={1}>
-                            Helium mix:
+            <Box bgcolor="secondary.main" color="secondary.contrastText" p={1}>
+              Helium mix:
             </Box>
-            <Grid item>Inoptimal</Grid>
-              <Switch
-                checked={state.checkedA}
-                onChange={handleChange}
-                name="checkedA"
-                inputProps={{ 'aria-label': 'secondary checkbox' }}
+            <Grid item className={classes.formItemSpacing}>Inoptimal</Grid>
+            <Grid item>
+              <Controller
+                name="heliumMix"
+                control={control}
+                render={({ field }) => <Switch {...field} />}
+                defaultValue={false}
               />
+            </Grid>
             <Grid item>Optimal</Grid>
           </Grid>
           <FormControlLabel
-            value=""
-            control={<Checkbox color="primary" />}
-            label="Aknowledged:"
+            control={
+              <Checkbox
+              /*registering is enough to get the empty string but it's not what we want */
+              {...register("aknowledged")}
+              defaultValue="false"
+              />
+            }
+            label="uncontrolled:"
             labelPlacement="start"
           />
+
           <FormControlLabel
-            value=""
+            {...register("bearings")}
             control={<Checkbox color="primary" />}
-            label="Bearings:"
+            label="Bearings set:"
             labelPlacement="start"
           />
           
           <TextField 
-            label="Airship" 
+            {...register("airshipStatus")}
+            label="Airship status" 
             helperText="Ready?" 
             variant="outlined"
+            margin="normal"
           />
+          {errors.airshipStatus && <span>This field is required</span>}
 
           <Grid component="label" container alignItems="center" spacing={0}>
             <TextField
+              {...register("coordinateW")}
               disabled
               id="filled-disabled"
-              label="Disabled"
-              defaultValue="Hello World"
+              label="Latitude"
+              defaultValue="N: 40° 41' 21.2892''"
               variant="filled"
+              margin="normal"
             />
-            <TextField
+            <TextField className={classes.formItemSpacing}
+              {...register("coordinateS")}
               disabled
               id="filled-disabled"
-              label="Disabled"
-              defaultValue="Hello World"
+              label="Longitude"
+              defaultValue="W: 74° 2' 40.2072''"
               variant="filled"
+              margin="normal"
             />
           </Grid>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            endIcon={<Send />}
+          >
+            Send
+          </Button>
         </FormControl>
-      
-
-        <Grid container spacing={1}>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="primary.main" color="primary.contrastText" p={2}>
-                            primary.main
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="secondary.main" color="secondary.contrastText" p={2}>
-              secondary.main
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="error.main" color="error.contrastText" p={2}>
-                           error.main
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="warning.main" color="warning.contrastText" p={2}>
-                           warning.main
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="info.main" color="info.contrastText" p={2}>
-                       info.main
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="success.main" color="success.contrastText" p={2}>
-                          success.main
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="text.primary" color="background.paper" p={2}>
-                         text.primary
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="text.secondary" color="background.paper" p={2}>
-                           text.secondary
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box bgcolor="text.disabled" color="background.paper" p={2}>
-                            text.disabled
-            </Box>
-          </Grid>
-        </Grid>
-      </div>
+      </form>
   );
 }

@@ -15,7 +15,7 @@ export default function App() {
     <Router>
       <div className={classes.root}>
         <Drawer/>
-        <Box className={classes.main} p={2}>
+        <Box className={classes.main} alignContent="center" p={2}>
           <Typography variant="h3">Engineer report form #35168 on kirov condition</Typography>
           <FormUtils/>
         </Box>
