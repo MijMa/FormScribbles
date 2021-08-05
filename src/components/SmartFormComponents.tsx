@@ -6,15 +6,16 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
+import { DatePickerProps } from 'material-ui';
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 type LabeledCheckBoxProps = {
-  name: String,
-  label: String,
+  name: string,
+  label: string
 }
 
-export function LabeledCheckBox({ name, label, control}) {
+export function LabeledCheckBox( {name, label} : DatePickerProps, {control} ) {
   return (
     <Controller
     //control on liitäntä formiin itseensä. Tietää mitä submittaa jne
@@ -23,7 +24,7 @@ export function LabeledCheckBox({ name, label, control}) {
       render={({ field }) => (
         <FormControlLabel
           control={<Checkbox {...field} />}
-          label="Aknowledged:"
+          label={label}
           labelPlacement="start"
         />
       )}
