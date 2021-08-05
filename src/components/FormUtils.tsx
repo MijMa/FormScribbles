@@ -74,6 +74,7 @@ export default function FormUtils() {
           </Grid>
           <Grid item>Optimal</Grid>
         </Grid>
+
         <Controller
           control={control}
           name="aknowledged"
@@ -85,6 +86,8 @@ export default function FormUtils() {
             />
           )}
         />
+
+        {/* <SwitchModule SwitchName={'heliumMix'} /> */}
 
         <Controller
           control={control}
@@ -98,13 +101,20 @@ export default function FormUtils() {
           )}
         />
 
-        <TextField
-          {...register('airshipStatus')}
-          label="Airship status"
-          helperText="Ready?"
-          variant="outlined"
-          margin="normal"
+        <Controller
+          control={control}
+          name="airshipStatus"
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Airship status"
+              helperText="Ready?"
+              variant="outlined"
+              margin="normal"
+            />
+          )}
         />
+
         {errors.airshipStatus && <span>This field is required</span>}
 
         <Grid component="label" container alignItems="center" spacing={0}>

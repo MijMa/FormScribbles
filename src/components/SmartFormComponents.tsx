@@ -1,24 +1,22 @@
 import {
-  Button,
   Checkbox,
   FormControlLabel,
   Switch,
   TextField,
 } from '@material-ui/core';
-import { Send } from '@material-ui/icons';
-import { DatePickerProps } from 'material-ui';
 import React from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 type LabeledCheckBoxProps = {
-  name: string,
-  label: string
-}
+  name: string;
+  label: string;
+};
 
-export function LabeledCheckBox( {name, label} : DatePickerProps, {control} ) {
+export function LabeledCheckBox({ name, label }: LabeledCheckBoxProps) {
+  const { control } = useFormContext();
+
   return (
     <Controller
-    //control on liitäntä formiin itseensä. Tietää mitä submittaa jne
       control={control}
       name={name}
       render={({ field }) => (
@@ -32,23 +30,32 @@ export function LabeledCheckBox( {name, label} : DatePickerProps, {control} ) {
   );
 }
 
-export function Switch({ name, control }) {
+type SwitchProps = {
+  SwitchName: string;
+  //label: string;
+};
+
+//Tälle voisi ehkä antaa label-otsikon parametrina
+export function SwitchModule({ SwitchName }: SwitchProps) {
+  const { control } = useFormContext();
+
   return (
     <Controller
-      name="heliumMix"
+      name={SwitchName}
       control={control}
       render={({ field }) => <Switch {...field} />}
     />
   );
 }
 
-export function TextField({ register, name, ...rest }) {
-  return (
-    <TextField
-      {register(name)}
-      {...rest}
-    />
-  );
+type TextFieldProps = {
+  TextName: string;
+};
+
+export function TextFieldModule({ TextName }: TextFieldProps, { ...rest }) {
+  const { register } = useFormContext();
+
+  return <TextField {...register(TextName)} {...rest} />;
 }
 
 //ehkä? ainakin voisi katsoa tyylisääntöjä
