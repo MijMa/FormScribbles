@@ -50,12 +50,31 @@ export function SwitchModule({ SwitchName }: SwitchProps) {
 
 type TextFieldProps = {
   TextName: string;
+  TextLabel: String;
 };
 
-export function TextFieldModule({ TextName }: TextFieldProps, { ...rest }) {
-  const { register } = useFormContext();
+export function TextFieldModule(
+  { TextName, TextLabel }: TextFieldProps,
+  { ...rest }
+) {
+  const { control } = useFormContext();
 
-  return <TextField {...register(TextName)} {...rest} />;
+  return (
+    <Controller
+      control={control}
+      name={TextName}
+      render={({ field }) => (
+        <TextField
+          {...field}
+          {...rest}
+          label={TextLabel}
+          helperText="Ready?"
+          variant="outlined"
+          margin="normal"
+        />
+      )}
+    />
+  );
 }
 
 //ehkä? ainakin voisi katsoa tyylisääntöjä

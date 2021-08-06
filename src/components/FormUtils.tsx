@@ -12,6 +12,7 @@ import { Send } from '@material-ui/icons';
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useStyles } from '../styles';
+import { TextFieldModule } from './SmartFormComponents';
 
 const defaultValues = {
   heliumMix: false,
@@ -87,8 +88,6 @@ export default function FormUtils() {
           )}
         />
 
-        {/* <SwitchModule SwitchName={'heliumMix'} /> */}
-
         <Controller
           control={control}
           name="bearings"
@@ -100,6 +99,10 @@ export default function FormUtils() {
             />
           )}
         />
+
+        {/* No ni, tähän pykätään komponentti ja katotaan miten menee */}
+
+        <TextFieldModule TextName="airshipStatus" TextLabel="airship status" />
 
         <Controller
           control={control}
