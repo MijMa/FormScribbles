@@ -57,7 +57,9 @@ export function TextFieldModule(
   { TextName, TextLabel }: TextFieldProps,
   { ...rest }
 ) {
-  const { control } = useFormContext();
+  const { control, formState } = useFormContext();
+  console.log('foo');
+  console.log(formState);
 
   return (
     <Controller
