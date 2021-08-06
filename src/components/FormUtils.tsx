@@ -10,7 +10,12 @@ import {
 } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
 import React from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from 'react-hook-form';
 import { useStyles } from '../styles';
 import { TextFieldModule } from './SmartFormComponents';
 
@@ -33,12 +38,7 @@ type FormValues = {
 };
 
 export default function FormUtils() {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const methods = useForm<FormValues>({
     defaultValues,
   });
   const classes = useStyles();
@@ -57,100 +57,107 @@ export default function FormUtils() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl margin="normal">
-        <Grid component="label" container alignItems="center" spacing={1}>
-          <Box bgcolor="secondary.main" color="secondary.contrastText" p={1}>
-            Helium mix:
-          </Box>
-          <Grid item className={classes.formItemSpacing}>
-            Inoptimal
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <FormControl margin="normal">
+          <Grid component="label" container alignItems="center" spacing={1}>
+            <Box bgcolor="secondary.main" color="secondary.contrastText" p={1}>
+              Helium mix:
+            </Box>
+            <Grid item className={classes.formItemSpacing}>
+              Inoptimal
+            </Grid>
+            <Grid item>
+              <Controller
+                name="heliumMix"
+                control={methods.control}
+                render={({ field }) => <Switch {...field} />}
+              />
+            </Grid>
+            <Grid item>Optimal</Grid>
           </Grid>
-          <Grid item>
-            <Controller
-              name="heliumMix"
-              control={control}
-              render={({ field }) => <Switch {...field} />}
-            />
-          </Grid>
-          <Grid item>Optimal</Grid>
-        </Grid>
 
-        <Controller
-          control={control}
-          name="aknowledged"
-          render={({ field }) => (
-            <FormControlLabel
-              control={<Checkbox {...field} />}
-              label="Aknowledged:"
-              labelPlacement="start"
-            />
+          <Controller
+            control={methods.control}
+            name="aknowledged"
+            render={({ field }) => (
+              <FormControlLabel
+                control={<Checkbox {...field} />}
+                label="Aknowledged:"
+                labelPlacement="start"
+              />
+            )}
+          />
+
+          <Controller
+            control={methods.control}
+            name="bearings"
+            render={({ field }) => (
+              <FormControlLabel
+                control={<Checkbox {...field} />}
+                label="Bearings set:"
+                labelPlacement="start"
+              />
+            )}
+          />
+
+          {/* No ni, tähän pykätään komponentti ja katotaan miten menee */}
+
+          <TextFieldModule
+            TextName="airshipStatus"
+            TextLabel="airship status"
+          />
+
+          <Controller
+            control={methods.control}
+            name="airshipStatus"
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Airship status"
+                helperText="Ready?"
+                variant="outlined"
+                margin="normal"
+              />
+            )}
+          />
+
+          {methods.formState.errors.airshipStatus && (
+            <span>This field is required</span>
           )}
-        />
 
-        <Controller
-          control={control}
-          name="bearings"
-          render={({ field }) => (
-            <FormControlLabel
-              control={<Checkbox {...field} />}
-              label="Bearings set:"
-              labelPlacement="start"
-            />
-          )}
-        />
-
-        {/* No ni, tähän pykätään komponentti ja katotaan miten menee */}
-
-        <TextFieldModule TextName="airshipStatus" TextLabel="airship status" />
-
-        <Controller
-          control={control}
-          name="airshipStatus"
-          render={({ field }) => (
+          <Grid component="label" container alignItems="center" spacing={0}>
             <TextField
-              {...field}
-              label="Airship status"
-              helperText="Ready?"
-              variant="outlined"
+              {...methods.register('coordinateW')}
+              disabled
+              id="filled-disabled"
+              label="Latitude"
+              defaultValue={defaultValues.coordinateW}
+              variant="filled"
               margin="normal"
             />
-          )}
-        />
-
-        {errors.airshipStatus && <span>This field is required</span>}
-
-        <Grid component="label" container alignItems="center" spacing={0}>
-          <TextField
-            {...register('coordinateW')}
-            disabled
-            id="filled-disabled"
-            label="Latitude"
-            defaultValue={defaultValues.coordinateW}
-            variant="filled"
-            margin="normal"
-          />
-          <TextField
-            className={classes.formItemSpacing}
-            {...register('coordinateS')}
-            disabled
-            id="filled-disabled"
-            label="Longitude"
-            defaultValue={defaultValues.coordinateS}
-            variant="filled"
-            margin="normal"
-          />
-        </Grid>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          endIcon={<Send />}
-        >
-          Send
-        </Button>
-      </FormControl>
-    </form>
+            <TextField
+              className={classes.formItemSpacing}
+              {...methods.register('coordinateS')}
+              disabled
+              id="filled-disabled"
+              label="Longitude"
+              defaultValue={defaultValues.coordinateS}
+              variant="filled"
+              margin="normal"
+            />
+          </Grid>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            endIcon={<Send />}
+          >
+            Send
+          </Button>
+        </FormControl>
+      </form>
+    </FormProvider>
   );
 }
